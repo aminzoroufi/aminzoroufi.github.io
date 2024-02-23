@@ -13,4 +13,4 @@ Brief information about yourself, your interests, etc.
 
 ## Contact
 
-You can reach me via email at [aminn.zoroufi@gmail.com(mailto:aminn.zoroufi@gmail.com)].
+You can reach me via email at [aminn.zoroufi@gmail.com](mailto:aminn.zoroufi@gmail.com).
