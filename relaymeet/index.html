@@ -33,13 +33,25 @@
   </head>
   <body>
     <iframe
+      id="relaymeet-app"
       title="RelayMeet application"
-      src="https://relaymeet.web.app/"
       allow="autoplay; camera; microphone; display-capture; clipboard-read; clipboard-write"
       referrerpolicy="strict-origin-when-cross-origin"
     ></iframe>
-    <noscript>
-      <p>JavaScript is required. <a href="https://relaymeet.web.app/">Open RelayMeet</a>.</p>
-    </noscript>
+    <noscript><a href="https://relaymeet.web.app/">Open RelayMeet</a></noscript>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var roomId = params.get("join");
+        var validRoomId = roomId && /^rm_[A-Za-z0-9_-]+$/.test(roomId);
+        var path = validRoomId ? "/join/" + encodeURIComponent(roomId) : "/";
+        var upstream = new URL(path, "https://relaymeet.web.app");
+        upstream.searchParams.set("relaymeetShell", "github");
+        if (validRoomId && params.get("mode") === "demo") {
+          upstream.searchParams.set("mode", "demo");
+        }
+        document.getElementById("relaymeet-app").src = upstream.toString();
+      }());
+    </script>
   </body>
 </html>
