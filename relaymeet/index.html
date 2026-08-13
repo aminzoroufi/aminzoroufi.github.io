@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f7fb" />
+    <meta name="description" content="RelayMeet — private browser meetings with host-controlled entry." />
+    <title>RelayMeet</title>
+    <style>
+      html, body, iframe {
+        height: 100%;
+        margin: 0;
+        width: 100%;
+      }
+      body {
+        background: #f4f7fb;
+        overflow: hidden;
+      }
+      iframe {
+        border: 0;
+        display: block;
+      }
+      noscript {
+        align-items: center;
+        color: #16213a;
+        display: flex;
+        font: 16px/1.5 system-ui, sans-serif;
+        inset: 0;
+        justify-content: center;
+        position: fixed;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      title="RelayMeet application"
+      src="https://relaymeet.web.app/"
+      allow="autoplay; camera; microphone; display-capture; clipboard-read; clipboard-write"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+    <noscript>
+      <p>JavaScript is required. <a href="https://relaymeet.web.app/">Open RelayMeet</a>.</p>
+    </noscript>
+  </body>
+</html>
