@@ -42,15 +42,49 @@
     <script>
       (function () {
         var params = new URLSearchParams(window.location.search);
-        var roomId = params.get("join");
+        var joinId = params.get("join");
+        var roomId = params.get("room");
+        var validJoinId = joinId && /^rm_[A-Za-z0-9_-]+$/.test(joinId);
         var validRoomId = roomId && /^rm_[A-Za-z0-9_-]+$/.test(roomId);
-        var path = validRoomId ? "/join/" + encodeURIComponent(roomId) : "/";
+        var role = params.get("role") === "guest" ? "guest" : "host";
+        var path = validRoomId
+          ? "/room/" + encodeURIComponent(roomId)
+          : validJoinId
+            ? "/join/" + encodeURIComponent(joinId)
+            : "/";
         var upstream = new URL(path, "https://relaymeet.web.app");
         upstream.searchParams.set("relaymeetShell", "github");
-        if (validRoomId && params.get("mode") === "demo") {
-          upstream.searchParams.set("mode", "demo");
-        }
-        document.getElementById("relaymeet-app").src = upstream.toString();
+        if (validRoomId) upstream.searchParams.set("role", role);
+        if (validJoinId && params.get("mode") === "demo") upstream.searchParams.set("mode", "demo");
+
+        var frame = document.getElementById("relaymeet-app");
+        frame.src = upstream.toString();
+
+        window.addEventListener("message", function (event) {
+          if (event.origin !== "https://relaymeet.web.app" || event.source !== frame.contentWindow) return;
+          var message = event.data;
+          if (!message || message.source !== "relaymeet") return;
+
+          if (message.type === "home-route") {
+            history.replaceState(null, "", window.location.pathname);
+            return;
+          }
+
+          var nextRoomId = message.roomId;
+          var nextRole = message.role;
+          if (
+            message.type !== "room-route" ||
+            !/^rm_[A-Za-z0-9_-]+$/.test(nextRoomId) ||
+            (nextRole !== "host" && nextRole !== "guest")
+          ) return;
+
+          var visibleUrl = new URL(window.location.href);
+          visibleUrl.search = "";
+          visibleUrl.hash = "";
+          visibleUrl.searchParams.set("room", nextRoomId);
+          visibleUrl.searchParams.set("role", nextRole);
+          history.replaceState(null, "", visibleUrl.pathname + visibleUrl.search);
+        });
       }());
     </script>
   </body>
