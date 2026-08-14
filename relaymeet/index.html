@@ -38,7 +38,7 @@
       allow="autoplay; camera; microphone; display-capture; clipboard-read; clipboard-write"
       referrerpolicy="strict-origin-when-cross-origin"
     ></iframe>
-    <noscript><a href="https://relaymeet.web.app/">Open RelayMeet</a></noscript>
+    <noscript>RelayMeet requires JavaScript to start a secure browser meeting.</noscript>
     <script>
       (function () {
         var params = new URLSearchParams(window.location.search);
@@ -52,7 +52,8 @@
           : validJoinId
             ? "/join/" + encodeURIComponent(joinId)
             : "/";
-        var upstream = new URL(path, "https://relaymeet.web.app");
+        var upstreamOrigin = "https://relaymeet-gateway.vercel.app";
+        var upstream = new URL(path, upstreamOrigin);
         upstream.searchParams.set("relaymeetShell", "github");
         if (validRoomId) upstream.searchParams.set("role", role);
         if (validJoinId && params.get("mode") === "demo") upstream.searchParams.set("mode", "demo");
@@ -61,7 +62,7 @@
         frame.src = upstream.toString();
 
         window.addEventListener("message", function (event) {
-          if (event.origin !== "https://relaymeet.web.app" || event.source !== frame.contentWindow) return;
+          if (event.origin !== upstreamOrigin || event.source !== frame.contentWindow) return;
           var message = event.data;
           if (!message || message.source !== "relaymeet") return;
 
